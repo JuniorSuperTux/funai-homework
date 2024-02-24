@@ -1,0 +1,3 @@
+HIT WALL -> +1
+BREAK WALL -> +6
+HIT OPPONENT -> +20

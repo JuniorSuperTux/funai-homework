@@ -1,0 +1,100 @@
+{
+    "id": "1P",
+    "x": 850,
+    "y": 250,
+    "speed": 8,
+    "score": 0,
+    "power": 10,
+    "oil": 100,
+    "lives": 3,
+    "angle": 0,
+    "gun_angle": 0,
+    "cooldown": 0,
+    "used_frame": 0,
+    "status": "GAME_ALIVE",
+    "teammate_info": [
+        {
+            "id": "1P",
+            "x": 850,
+            "y": 250,
+            "speed": 8,
+            "score": 0,
+            "power": 10,
+            "oil": 100,
+            "lives": 3,
+            "angle": 0,
+            "gun_angle": 0,
+            "cooldown": 0
+        }
+    ],
+    "competitor_info": [
+        {
+            "id": "2P",
+            "x": 100,
+            "y": 300,
+            "speed": 8,
+            "score": 0,
+            "power": 10,
+            "oil": 100,
+            "lives": 3,
+            "angle": 180,
+            "gun_angle": 180,
+            "cooldown": 0
+        }
+    ],
+    "walls_info": [
+        {
+            "id": "wall_4",
+            "x": 200,
+            "y": 0,
+            "lives": 4
+        },
+        {
+            "id": "wall_4",
+            "x": 250,
+            "y": 0,
+            "lives": 4
+        },
+        {
+            "id": "wall_4",
+            "x": 300,
+            "y": 0,
+            "lives": 4
+        },
+        {
+            "id": "wall_4",
+            "x": 350,
+            "y": 0,
+            "lives": 4
+        }
+    ],
+    "bullets_info": [],
+    "bullet_stations_info": [
+        {
+            "id": "bullets",
+            "x": 750,
+            "y": 150,
+            "power": 5
+        },
+        {
+            "id": "bullets",
+            "x": 200,
+            "y": 400,
+            "power": 5
+        }
+    ],
+	"oil_stations_info": [
+		{
+			"id": "oil",
+			"x": 250,
+			"y": 150,
+			"power": 30
+		},
+		{
+			"id": "oil",
+			"x": 700,
+			"y": 400,
+			"power": 30
+		}
+	]
+}
