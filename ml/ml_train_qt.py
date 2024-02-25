@@ -28,8 +28,8 @@ class MLPlay:
 		print(f"Initial Game {ai_name} ml script")
 		self.time = 0
 		
-		self.movement_env = MovementEnv()
-		self.gun_env = GunEnv()
+		self.movement_env = MovementEnv(self.side)
+		self.gun_env = GunEnv(self.side)
 		
 		self.movement_action = self.movement_env.action
 		self.gun_action = self.gun_env.action
@@ -70,7 +70,7 @@ class MLPlay:
 		gun_observation, gun_reward, gun_done, gun_info = self.gun_env.step(self.gun_action)
 		self.gun_state_ = [gun_observation]
 		gun_action = self.gun_QT.choose_action(str(self.gun_state_))
-		if not env.bullet_id(self.side) in scene_info["bullets_info"].keys() and not self.gun_refreshed:
+		if not env.id_exists(env.bullet_id(self.side), scene_info["bullets_info"]) and not self.gun_refreshed:
 			self.gun_QT.learn_from_episode()
 			self.gun_refreshed = True
 		if gun_action == 3: # SHOOT

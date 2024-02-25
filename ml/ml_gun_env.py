@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import sys, os
 sys.path.append(os.path.dirname(__file__))
 import math
@@ -35,7 +36,7 @@ class GunEnv():
 		
 		return observation
 	
-	def step(self, action: int):   
+	def step(self, action: int):
 		"""
 		Executes a given action in the environment and returns the resulting state.
 		
@@ -51,7 +52,7 @@ class GunEnv():
 		reward = 0
 		observation = self.__get_obs(self.scene_info)
 		
-		reward = self.__get_reward(observation)
+		reward = self.__get_reward(observation, self.action_mapping[action])
 		        
 		done = self.scene_info["status"] != "GAME_ALIVE"
 		
@@ -67,8 +68,8 @@ class GunEnv():
 		for wall in scene_info["walls_info"]:
 			map_arr[wall["x"]//env.BLOCK_LENGTH][wall["y"]//env.BLOCK_LENGTH] = wall["lives"]
 
-		corrected_x = scene_info["x"] + (env.BLOCK_LENGTH / 2)
-		corrected_y = scene_info["y"] + (env.BLOCK_LENGTH / 2)
+		corrected_x = scene_info["x"] + int(env.BLOCK_LENGTH / 2)
+		corrected_y = scene_info["y"] + int(env.BLOCK_LENGTH / 2)
 
 		arr_x, arr_y = corrected_x // env.BLOCK_LENGTH, corrected_y // env.BLOCK_LENGTH
 		for dx in range(-env.GUN_RANGE_BLOCKS - 2, env.GUN_RANGE_BLOCKS + 3):
@@ -78,8 +79,11 @@ class GunEnv():
 					observed_arr[target_x][target_y] = env.wall_lives_map[map_arr[target_x][target_y]]
 
 		bullet_info = scene_info["bullets_info"]
-		if env.bullet_id(env.opposite_side(self.side)) in bullet_info.keys():
-			opponent_bullet = bullet_info[env.bullet_id(env.opposite_side(self.side))]
+
+		bullet_x, bullet_y = -1, -1	
+		opponent_bullet = None
+		if env.id_exists(env.bullet_id(env.opposite_side(self.side)), bullet_info):
+			opponent_bullet = env.get_by_id(env.bullet_id(env.opposite_side(self.side)), bullet_info)
 			bullet_x = opponent_bullet["x"]
 			bullet_y = opponent_bullet["y"]
 
@@ -88,28 +92,24 @@ class GunEnv():
 			if item["id"] == env.opposite_side(self.side):
 				competitor_info = item
 
-
-		bullet_x, bullet_y = -1, -1	
 		opponent_x, opponent_y = competitor_info["x"], competitor_info["y"]
 
 
-		observation = {
-			"map": observed_arr,
-			"opponent": {
-				"relative_angle": env.get_degrees(opponent_y, corrected_y, opponent_x, corrected_x),
-				"distance": env.get_distance(opponent_x - corrected_x, opponent_y - corrected_y),
-			},
-			"opponent_bullet": {
-				"relative_angle": env.get_degrees(bullet_y, corrected_y, bullet_x, opponent_x),
-				"distance": env.get_distance(bullet_x - corrected_x, bullet_y - corrected_y),
-				"rotation": env.angle_map[opponent_bullet["rot"]]
-			},
-		}
+		observation = OrderedDict([
+			("map", observed_arr),
+
+			("opponent_relative_angle", env.get_degrees(opponent_y, corrected_y, opponent_x, corrected_x)),
+			("opponent_distance", env.get_distance(opponent_x, corrected_x, opponent_y, corrected_y)),
+
+			("bullet_relative_angle", env.get_degrees(bullet_y, corrected_y, bullet_x, opponent_x)),
+			("bullet_distance", env.get_distance(bullet_x, corrected_x, bullet_y, corrected_y)),
+			("bullet_rotation", env.angle_map[opponent_bullet["rot"]] if opponent_bullet else -1)
+		])
 		return observation
 	    
 	    
 	##########  to do  ##########
-	def __get_reward(self, observation):        
+	def __get_reward(self, observation, action):
 		reward = 0        
 		
 		

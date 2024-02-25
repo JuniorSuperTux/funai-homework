@@ -2,6 +2,7 @@
 The template of the main script of the machine learning process
 """
      
+from calendar import c
 import sys
 import os
 sys.path.append(os.path.dirname(__file__))
@@ -23,16 +24,18 @@ class MLPlay:
 	def update(self, scene_info: dict, keyboard=[], *args, **kwargs):
 		#if self.side == "2P":
 		#    print("POsition {} {}".format(scene_info["x"] + 25, scene_info["y"] + 25))
-		if self.side == "2P":
-			print(scene_info["bullets_info"])        
-		corrected_x = scene_info["x"] + (env.BLOCK_LENGTH / 2)
-		corrected_y = scene_info["y"] + (env.BLOCK_LENGTH / 2)
+#		if self.side == "2P":
+#			print(scene_info["bullets_info"])        
+		corrected_x = scene_info["x"] + int(env.BLOCK_LENGTH / 2)
+		corrected_y = scene_info["y"] + int(env.BLOCK_LENGTH / 2)
 		
 		competitor_info = None
 		for item in scene_info["competitor_info"]:
 			if item["id"] == env.opposite_side(self.side):
 				competitor_info = item
 		
+		if self.side == "1P":
+			print(competitor_info["gun_angle"])
 		opponent_x, opponent_y = competitor_info["x"], competitor_info["y"]
 #		if self.side == "2P":
 #			print("GUN_DEGREE:{}, CAR_DEGREE: {}".format(scene_info["gun_angle"], env.get_degrees(opponent_y, corrected_y, opponent_x, corrected_x)))
@@ -93,6 +96,8 @@ class MLPlay:
 		
 		if not command:
 			command.append("NONE")
+
+		command.append("AIM_LEFT")
 
 		return command
 	
